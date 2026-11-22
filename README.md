@@ -1,7 +1,18 @@
-# Diwali Potluck Charades
+# Diwali Games - Guru, Suhasini & Arnav
 
-A mobile-friendly movie charades game. Each round shows a movie name and an
-embedded YouTube clip of it. Pick a language:
+Mobile-friendly party games. Switch games from the left sidebar (the ☰ button
+on phones):
+
+- **Charades**: each round shows a movie name and an embedded YouTube clip.
+- **Lost in Translation — Famous Hits Edition**: 25 famous Hindi and Kannada
+  movie and song titles, translated literally into English. Guess the original.
+
+FastAPI backend, plain HTML/JS frontend, no database, no API keys. Runs on
+Google Cloud Run.
+
+## Charades
+
+Pick a language:
 
 | Language  | Movies | Years     |
 |-----------|--------|-----------|
@@ -9,10 +20,7 @@ embedded YouTube clip of it. Pick a language:
 | English   | 200    | 1990-2009 |
 | Kannada   | 102    | 1990-2026 |
 
-FastAPI backend, plain HTML/JS frontend, no database, no API keys. Runs on
-Google Cloud Run.
-
-## How to play
+How to play:
 
 1. Pick a language (Bollywood, English, Kannada) and optionally an era.
 2. Hand the phone to the actor and tap **Next movie**. The card is covered and
@@ -25,6 +33,13 @@ Movies don't repeat on a device until every movie in that language and era has
 been shown. On phones that block autoplay with sound, the clip starts muted with
 a **Tap for sound** button.
 
+## Lost in Translation
+
+Each card shows the category and the English clue. Tap **Reveal** on a card to
+show its answer, or use **Reveal all** and **Hide all answers**. The clues and
+answers live in `app/data/lost_in_translation.json`; edit that file to change
+the questions.
+
 ## Project layout
 
 ```
@@ -34,7 +49,9 @@ app/
                            (name, year, optional "query")
   data/movies.json         generated: all movies with YouTube video IDs
   data/overrides.json      manual {"language": {"Name (Year)": "videoId"}} fixes
-  static/                  index.html, app.js, styles.css
+  data/lost_in_translation.json  Lost in Translation clues and answers
+  static/                  index.html, styles.css, nav.js (sidebar and game
+                           switching), app.js (Charades), translation.js
 scripts/resolve_videos.py  finds YouTube IDs with yt-dlp (no API key)
 ```
 
@@ -95,6 +112,9 @@ gcloud run deploy diwali-charades \
 ```
 
 The command prints the public URL. Redeploy with the same command after any change.
+
+A Cloud Build trigger on this repo runs the same deploy from `cloudbuild.yaml`
+on every push to `main`.
 
 ## Docker (optional local check)
 

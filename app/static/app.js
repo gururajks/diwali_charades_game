@@ -282,6 +282,12 @@ els.unmute.addEventListener("click", () => {
   player.unMute();
   els.unmute.hidden = true;
 });
+document.addEventListener("gamechange", (event) => {
+  if (event.detail !== "charades" && playerReady) {
+    clearTimeout(autoplayCheck);
+    player.pauseVideo();
+  }
+});
 
 async function init() {
   resetTimer();

@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = Path(__file__).resolve().parent
 MOVIES_PATH = BASE_DIR / "data" / "movies.json"
+TRANSLATION_PATH = BASE_DIR / "data" / "lost_in_translation.json"
 STATIC_DIR = BASE_DIR / "static"
 
 INDUSTRY_LABELS = {
@@ -27,8 +28,9 @@ def load_movies() -> list[dict]:
 
 
 MOVIES = load_movies()
+TRANSLATION_GAME = json.loads(TRANSLATION_PATH.read_text())
 
-app = FastAPI(title="Diwali Potluck Charades")
+app = FastAPI(title="Diwali Games - Guru, Suhasini & Arnav")
 
 
 @app.middleware("http")
@@ -74,6 +76,11 @@ def random_movie(
     exhausted = not pool
     movie = random.choice(pool or in_range)
     return {**movie, "remaining": max(len(pool) - 1, 0), "total": len(in_range), "exhausted": exhausted}
+
+
+@app.get("/api/lost-in-translation")
+def lost_in_translation() -> dict:
+    return TRANSLATION_GAME
 
 
 @app.get("/")
