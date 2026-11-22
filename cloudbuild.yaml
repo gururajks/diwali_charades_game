@@ -1,34 +1,17 @@
-# The build's service account needs Cloud Run Admin, Artifact Registry Writer,
-# and Service Account User on the Cloud Run runtime service account.
-substitutions:
-  _SERVICE_NAME: diwali-charades
-  _REGION: us-central1
-  _AR_REPO: cloud-run-source-deploy
-  _IMAGE: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_AR_REPO}/${_SERVICE_NAME}:${COMMIT_SHA}
-
 steps:
-  - id: build
-    name: gcr.io/cloud-builders/docker
-    args: ["build", "-t", "${_IMAGE}", "."]
-
-  - id: push
-    name: gcr.io/cloud-builders/docker
-    args: ["push", "${_IMAGE}"]
-
-  - id: deploy
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
       - run
       - deploy
-      - ${_SERVICE_NAME}
-      - --image=${_IMAGE}
-      - --region=${_REGION}
+      - diwali-charades
+      - --source=.
+      - --region=us-central1
       - --allow-unauthenticated
       - --min-instances=0
       - --max-instances=3
       - --memory=256Mi
+      - --quiet
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  dynamicSubstitutions: true
