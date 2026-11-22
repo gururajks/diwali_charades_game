@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1a0b2e">
+  <title>Diwali Potluck Charades</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪔</text></svg>">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1><span class="diya" aria-hidden="true">🪔</span> Diwali Potluck Charades</h1>
+  </header>
+
+  <nav class="filters">
+    <div class="segmented" id="industries" role="group" aria-label="Movie language"></div>
+    <select id="era" aria-label="Movie era">
+      <option value="all">All eras</option>
+      <option value="1990-1999">90s</option>
+      <option value="2000-2009">2000s</option>
+      <option value="2010-2019">2010s</option>
+      <option value="2020-2029">2020s</option>
+    </select>
+  </nav>
+
+  <main>
+    <section class="card" id="card">
+      <div class="cover" id="cover" hidden>
+        <p>Hidden from guessers</p>
+        <button class="btn ghost" id="reveal">Tap to show</button>
+      </div>
+
+      <div class="title-row">
+        <h2 id="movie-name">Loading...</h2>
+        <span class="year" id="movie-year"></span>
+      </div>
+
+      <div class="video-wrap">
+        <div id="player"></div>
+        <button class="unmute" id="unmute" hidden>Tap for sound</button>
+      </div>
+
+      <p class="meta" id="meta"></p>
+    </section>
+
+    <section class="timer" aria-label="Timer">
+      <div class="clock" id="clock">1:00</div>
+      <div class="timer-controls">
+        <select id="duration" aria-label="Timer length">
+          <option value="60">60s</option>
+          <option value="90">90s</option>
+          <option value="120">120s</option>
+        </select>
+        <button class="btn secondary" id="timer-toggle">Start timer</button>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button class="btn secondary" id="hide">Hide</button>
+      <button class="btn primary" id="next">Next movie</button>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+  <script src="https://www.youtube.com/iframe_api" async></script>
+</body>
+</html>
