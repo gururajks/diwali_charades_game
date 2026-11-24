@@ -1,4 +1,4 @@
-const GAMES = ["charades", "translation"];
+const GAMES = ["charades", "translation", "songs"];
 
 const navEls = {
   menuBtn: document.getElementById("menu-btn"),

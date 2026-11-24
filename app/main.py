@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = Path(__file__).resolve().parent
 MOVIES_PATH = BASE_DIR / "data" / "movies.json"
+SONGS_PATH = BASE_DIR / "data" / "songs.json"
 TRANSLATION_PATH = BASE_DIR / "data" / "lost_in_translation.json"
 STATIC_DIR = BASE_DIR / "static"
 
@@ -16,6 +17,13 @@ INDUSTRY_LABELS = {
     "hollywood": "English",
     "kannada": "Kannada",
 }
+
+LANGUAGE_LABELS = {
+    "bollywood": "Bollywood",
+    "kannada": "Kannada",
+}
+
+SONG_FIELDS = ("language", "title", "film", "year", "music", "singers", "videoId")
 
 
 def load_movies() -> list[dict]:
@@ -27,8 +35,35 @@ def load_movies() -> list[dict]:
     ]
 
 
+def load_songs() -> list[dict]:
+    songs = json.loads(SONGS_PATH.read_text())
+    return [{field: s[field] for field in SONG_FIELDS} for s in songs if s.get("videoId")]
+
+
 MOVIES = load_movies()
+SONGS = load_songs()
 TRANSLATION_GAME = json.loads(TRANSLATION_PATH.read_text())
+
+
+def summarize(items: list[dict], key: str, labels: dict[str, str]) -> list[dict]:
+    groups = []
+    for group_id, label in labels.items():
+        years = sorted({item["year"] for item in items if item[key] == group_id})
+        if years:
+            count = sum(1 for item in items if item[key] == group_id)
+            groups.append({"id": group_id, "label": label, "count": count, "years": years})
+    return groups
+
+
+def pick_unseen(candidates: list[dict], exclude: str, not_found: str) -> dict:
+    if not candidates:
+        raise HTTPException(status_code=404, detail=not_found)
+    seen = set(filter(None, exclude.split(",")))
+    pool = [item for item in candidates if item["videoId"] not in seen]
+    exhausted = not pool
+    item = random.choice(pool or candidates)
+    return {**item, "remaining": max(len(pool) - 1, 0), "total": len(candidates), "exhausted": exhausted}
+
 
 app = FastAPI(title="Diwali Games - Guru, Suhasini & Arnav")
 
@@ -43,18 +78,12 @@ async def revalidate_static(request: Request, call_next):
 
 @app.get("/healthz")
 def healthz() -> dict:
-    return {"status": "ok", "movies": len(MOVIES)}
+    return {"status": "ok", "movies": len(MOVIES), "songs": len(SONGS)}
 
 
 @app.get("/api/catalog")
 def catalog() -> dict:
-    industries = []
-    for industry_id, label in INDUSTRY_LABELS.items():
-        years = sorted({m["year"] for m in MOVIES if m["industry"] == industry_id})
-        if years:
-            count = sum(1 for m in MOVIES if m["industry"] == industry_id)
-            industries.append({"id": industry_id, "label": label, "count": count, "years": years})
-    return {"industries": industries}
+    return {"industries": summarize(MOVIES, "industry", INDUSTRY_LABELS)}
 
 
 @app.get("/api/movie/random")
@@ -68,14 +97,26 @@ def random_movie(
         m for m in MOVIES
         if m["industry"] == industry and min_year <= m["year"] <= max_year
     ]
-    if not in_range:
-        raise HTTPException(status_code=404, detail="No movies for that language and era")
+    return pick_unseen(in_range, exclude, "No movies for that language and era")
 
-    seen = set(filter(None, exclude.split(",")))
-    pool = [m for m in in_range if m["videoId"] not in seen]
-    exhausted = not pool
-    movie = random.choice(pool or in_range)
-    return {**movie, "remaining": max(len(pool) - 1, 0), "total": len(in_range), "exhausted": exhausted}
+
+@app.get("/api/songs/catalog")
+def songs_catalog() -> dict:
+    return {"languages": summarize(SONGS, "language", LANGUAGE_LABELS)}
+
+
+@app.get("/api/song/random")
+def random_song(
+    language: str = Query("bollywood"),
+    exclude: str = Query("", description="Comma-separated video IDs already played"),
+    min_year: int = Query(1900, alias="minYear"),
+    max_year: int = Query(2100, alias="maxYear"),
+) -> dict:
+    in_range = [
+        s for s in SONGS
+        if s["language"] == language and min_year <= s["year"] <= max_year
+    ]
+    return pick_unseen(in_range, exclude, "No songs for that language and decade")
 
 
 @app.get("/api/lost-in-translation")

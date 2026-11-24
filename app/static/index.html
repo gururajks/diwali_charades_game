@@ -21,6 +21,9 @@
       <a class="nav-link" href="#translation" data-game="translation">
         <span class="nav-icon" aria-hidden="true">🎬</span> Lost in Translation
       </a>
+      <a class="nav-link" href="#songs" data-game="songs">
+        <span class="nav-icon" aria-hidden="true">🎵</span> Guess the Song
+      </a>
     </nav>
   </aside>
   <div class="scrim" id="scrim" hidden></div>
@@ -83,7 +86,7 @@
 
       <div class="game" id="game-translation" hidden>
         <section class="lit-head">
-          <h2 class="lit-title" id="lit-title">Lost in Translation</h2>
+          <h2 class="game-title" id="lit-title">Lost in Translation</h2>
           <div class="lit-toolbar">
             <p class="lit-counter" id="lit-counter" aria-live="polite"></p>
             <button class="btn secondary lit-bulk" id="lit-reveal-all">Reveal all</button>
@@ -94,11 +97,65 @@
 
         <button class="btn secondary" id="lit-hide-all">Hide all answers</button>
       </div>
+
+      <div class="game" id="game-songs" hidden>
+        <h2 class="game-title">Guess the Song</h2>
+        <div class="filters">
+          <div class="segmented" id="song-languages" role="group" aria-label="Song language"></div>
+          <select id="song-era" aria-label="Decade">
+            <option value="all">All decades</option>
+            <option value="1980-1989">80s</option>
+            <option value="1990-1999">90s</option>
+            <option value="2000-2009">2000s</option>
+            <option value="2010-2019">2010s</option>
+            <option value="2020-2029">2020s</option>
+          </select>
+        </div>
+
+        <section class="card" aria-label="Current song">
+          <div class="song-answer" id="song-answer" hidden>
+            <p class="song-title"><span class="lit-check" aria-hidden="true">✓</span><span id="song-title"></span></p>
+            <p class="song-film" id="song-film"></p>
+            <dl class="song-credits">
+              <dt>Music</dt>
+              <dd id="song-music"></dd>
+              <dt>Singers</dt>
+              <dd id="song-singers"></dd>
+            </dl>
+          </div>
+
+          <div class="song-stage covered" id="song-stage">
+            <div id="song-player"></div>
+            <div class="song-cover">
+              <button class="song-play" id="song-play" type="button" aria-label="Play song">
+                <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>
+                <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>
+              </button>
+              <p class="song-clock" id="song-clock">0:00</p>
+              <p class="song-status" id="song-status" aria-live="polite">Tap play to start the song</p>
+              <div class="song-controls">
+                <button class="pill" id="song-restart" type="button">Restart</button>
+                <button class="pill" id="song-skip" type="button">Skip 10s</button>
+                <button class="pill sound" id="song-sound" type="button" hidden>Tap for sound</button>
+              </div>
+            </div>
+          </div>
+
+          <p class="meta" id="song-meta"></p>
+        </section>
+
+        <section class="actions song-actions">
+          <button class="btn secondary" id="song-reveal">Reveal answer</button>
+          <button class="btn primary" id="song-next">Play next song</button>
+        </section>
+      </div>
     </main>
   </div>
 
+  <script src="/static/youtube.js"></script>
   <script src="/static/app.js"></script>
   <script src="/static/translation.js"></script>
+  <script src="/static/songs.js"></script>
   <script src="/static/nav.js"></script>
   <script src="https://www.youtube.com/iframe_api" async></script>
 </body>

@@ -86,7 +86,7 @@ let playerReady = false;
 let pendingVideo = null;
 let autoplayCheck = null;
 
-window.onYouTubeIframeAPIReady = () => {
+youtubeReady.then(() => {
   player = new YT.Player("player", {
     host: "https://www.youtube-nocookie.com",
     playerVars: { playsinline: 1, rel: 0, modestbranding: 1 },
@@ -105,7 +105,7 @@ window.onYouTubeIframeAPIReady = () => {
       },
     },
   });
-};
+});
 
 function playVideo(videoId, autoplay) {
   if (!playerReady) {

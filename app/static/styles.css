@@ -5,8 +5,8 @@
   --sand: #efe8df;
   --line: #e5ddd2;
   --text: #3b3631;
-  --muted: #857b71;
-  --rose: #9a5f55;
+  --muted: #6b6259;
+  --rose: #8a5148;
   --rose-soft: #ead2cb;
   --blush: #f6e9e5;
   --sage: #5f7a58;
@@ -192,7 +192,7 @@ body.nav-open .sidebar {
 
 select {
   appearance: none;
-  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23857b71' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%236b6259' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
   color: var(--text);
   border: 1px solid var(--line);
   border-radius: 999px;
@@ -385,21 +385,21 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* Lost in Translation */
-
-.lit-head {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.lit-title {
+.game-title {
   margin: 0;
   font-family: var(--serif);
   font-size: 1.45rem;
   font-weight: 600;
   line-height: 1.3;
   color: var(--text);
+}
+
+/* Lost in Translation */
+
+.lit-head {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .lit-toolbar {
@@ -500,3 +500,142 @@ main {
   background: var(--surface);
   color: var(--muted);
 }
+
+/* Guess the Song */
+
+.song-answer {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  background: var(--sage-soft);
+  border: 1px solid var(--sage-line);
+  border-radius: 12px;
+}
+
+.song-answer[hidden] { display: none; }
+
+.song-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.4rem, 6vw, 1.8rem);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--sage);
+}
+
+.song-film {
+  margin: 4px 0 10px;
+  font-size: 0.95rem;
+}
+
+.song-credits {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 4px 12px;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.song-credits dt { color: var(--muted); }
+.song-credits dd { margin: 0; }
+
+.song-stage {
+  position: relative;
+  display: grid;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--sand);
+}
+
+.song-stage.covered { min-height: 224px; }
+
+.song-stage iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.song-cover {
+  position: relative;
+  z-index: 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(234, 210, 203, 0.75), transparent 52%),
+    radial-gradient(circle at 80% 90%, rgba(203, 216, 196, 0.75), transparent 52%),
+    var(--sand);
+}
+
+.song-stage.covered .song-cover { display: flex; }
+
+.song-play {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 6px 18px rgba(59, 54, 49, 0.12);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.song-play svg { width: 26px; height: 26px; }
+.song-play .icon-pause,
+.song-play.playing .icon-play { display: none; }
+.song-play.playing .icon-pause { display: block; }
+
+.song-clock {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.song-status {
+  margin: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--muted);
+}
+
+.song-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pill {
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.pill.sound {
+  border-color: var(--rose-soft);
+  background: var(--blush);
+  color: var(--rose);
+  font-weight: 600;
+}
+
+.pill[hidden] { display: none; }
+
+.song-actions { grid-template-columns: 1fr 1fr; }
